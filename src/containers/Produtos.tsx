@@ -1,33 +1,27 @@
 import { Produto as ProdutoType } from '../App'
 import Produto from '../components/Produto'
-import { useGetProdutosQuery } from '../services/api'
-import { useGetFavoritosQuery } from '../services/apiF'
 
 import * as S from './styles'
 
-const ProdutosComponent = () => {
-  const { data: produtos, isLoading, error } = useGetProdutosQuery()
-  console.log(produtos, isLoading, error)
-  const { data: favoritos = [] } = useGetFavoritosQuery()
+interface Props {
+  produtos: ProdutoType[]
+  favoritos: ProdutoType[]
+  toggleFavorito: (produto: ProdutoType) => void
+}
 
-  const produtoEstaNosFavoritos = (produto: ProdutoType) => {
-    const produtoId = produto.id
-    const IdsDosFavoritos = favoritos.map((f: ProdutoType) => f.id)
-
-    return IdsDosFavoritos.includes(produtoId)
-  }
-
-  if (isLoading) return <h2>Carregando...</h2>
-
+const Produtos: React.FC<Props> = ({ produtos, favoritos, toggleFavorito }) => {
   return (
-    <>
-      <S.Produtos>
-        {produtos?.map((produto) => (
-          <Produto key={produto.id} produto={produto} />
-        ))}
-      </S.Produtos>
-    </>
+    <S.Produtos>
+      {produtos.map((produto) => (
+        <Produto
+          key={produto.id}
+          produto={produto}
+          estaNosFavoritos={favoritos.some((fav) => fav.id === produto.id)}
+          toggleFavorito={toggleFavorito}
+        />
+      ))}
+    </S.Produtos>
   )
 }
 
-export default ProdutosComponent
+export default Produtos

@@ -1,17 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit'
-import carrinho from './reducers/carrinho'
-import favorito from './reducers/favorito'
+
+import carrinhoReducer from './reducers/carrinho'
+import favoritoReducer from './reducers/favoritos'
+
 import api from '../services/api'
-import { buildGetDefaultMiddleware } from '@reduxjs/toolkit/dist/getDefaultMiddleware'
 
 export const store = configureStore({
   reducer: {
-    carrinho: carrinho,
-    favorito: favorito,
+    carrinho: carrinhoReducer,
+    favoritos: favoritoReducer,
     [api.reducerPath]: api.reducer
   },
-  middleware: (buildGetDefaultMiddleware) =>
-    buildGetDefaultMiddleware().concat(api.middleware)
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(api.middleware)
 })
 
 export type RootReducer = ReturnType<typeof store.getState>
